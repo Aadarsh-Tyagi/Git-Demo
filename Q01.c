@@ -1,32 +1,55 @@
 /*
-WAP to enter numbers till the user wants. At the end, it should display the count of positive, negative, and Zeroes entered.
+Print a pattern of numbers from 1 to n as shown below. Each of the numbers is separated
+by a single space.
+
+1 2 3 4 5 4 3 2 1
+1 2 3 4   4 3 2 1
+1 2 3       3 2 1
+1 2           2 1
+1               1
 */
 
 #include <stdio.h>
-int main() 
+
+int main()
 {
-    int num, positiveCount = 0, negativeCount = 0, zeroCount = 0;
-    char choice;
+    int num;
+    printf("Enter number(Your choice): ");
+    scanf("%d", &num);
 
-    do {
-        printf("Enter a number: ");
-        scanf("%d", &num);
-
-        if (num > 0) {
-            positiveCount++;
-        } else if (num < 0) {
-            negativeCount++;
-        } else {
-            zeroCount++;
+    for (int i = num; i >= 1; i--) 
+    {
+        
+        for (int j = 1; j <= i; j++) 
+        {
+            printf("%d ", j); // Left Triangle
         }
 
-        printf("Do you want to enter another number? (y/n): ");
-        scanf(" %c", &choice);
-    } while (choice == 'y' || choice == 'Y');
+        int spaces = 2 * (num - i) - 1;
+        for (int k = 0; k < spaces; k++) 
+        {
+            printf("  "); // two spaces for each "slot"
+        }
 
-    printf("Count of Positive numbers: %d\n", positiveCount);
-    printf("Count of Negative numbers: %d\n", negativeCount);
-    printf("Count of Zeroes: %d\n", zeroCount);
+        if (i == num) 
+        {
+            // First row print from n-1 down to 1
+            for (int j = num - 1; j >= 1; j--) 
+            {
+                printf("%d ", j);
+            }                                           // Right side
+        } else 
+        {
+            // Other rows print from i down to 1
+            for (int j = i; j >= 1; j--) 
+            {
+                printf("%d ", j);
+            }
+        }
+
+        printf("\n");
+    }
 
     return 0;
 }
+
