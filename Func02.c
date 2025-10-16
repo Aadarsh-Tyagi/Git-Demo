@@ -14,7 +14,8 @@ int main()
     int num, code;
     char try_Again;
 
-    do {
+    do 
+    {
         printf("Enter the Desired Number: ");
         scanf("%d", &num);
 
@@ -23,7 +24,8 @@ int main()
         printf("Enter the Code: ");
         scanf("%d", &code);
 
-        switch (code) {
+        switch (code) 
+        {
             case 111:
                 check_Prime(num);
                 break;
