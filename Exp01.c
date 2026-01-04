@@ -1,3 +1,10 @@
+//
+//  Exp01.h
+//  Coding
+//
+//  Created by Arsh on 26/08/25.
+//
+
 #include <stdio.h>
 
 int main ()
@@ -8,3 +15,5 @@ int main ()
     
     return 0;
 }
+
+
