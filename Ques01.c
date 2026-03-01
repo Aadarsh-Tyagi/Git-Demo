@@ -1,33 +1,21 @@
+// Array Traversal
+
 #include <stdio.h>
+#include <time.h>
 
 int main() {
-    int n;
-    scanf("%d", &n);
+    int n = 5000;
+    int arr[5000];
+    clock_t start, end;
 
-    int arr[n];
     for (int i = 0; i < n; i++)
-        scanf("%d", &arr[i]);
+        arr[i] = i + 1;
 
-    int k;
-    scanf("%d", &k);
+    start = clock();
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    end = clock();
 
-    int comparisons = 0;
-    int foundIndex = -1;
-
-    for (int i = 0; i < n; i++) {
-        comparisons++;
-        if (arr[i] == k) {
-            foundIndex = i;
-            break;
-        }
-    }
-
-    if (foundIndex != -1)
-        printf("Found at index %d\n", foundIndex);
-    else
-        printf("Not Found\n");
-
-    printf("Comparisons = %d\n", comparisons);
-
+    printf("\nTime: %f sec\n", (double)(end - start) / CLOCKS_PER_SEC);
     return 0;
 }
