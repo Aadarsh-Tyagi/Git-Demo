@@ -1,37 +1,35 @@
-// Array Deletion
+// O(n)
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
-#define MAX 10000
-
-int arr[MAX];
-int n = 5000;
-
-void delete(int pos) {
-    for (int i = pos; i < n - 1; i++)
-        arr[i] = arr[i + 1];
-    n--;
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++)
+        if (arr[i] == key) return i;
+    return -1;
 }
 
 int main() {
+    int sizes[] = {1000, 5000, 10000, 50000};
     clock_t start, end;
 
-    for (int i = 0; i < n; i++)
-        arr[i] = i + 1;
+    printf("O(n) - Linear Search\n");
+    printf("%-12s %-15s\n", "n", "Time(sec)");
+    printf("---------------------------\n");
 
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        delete(0);
-    end = clock();
-    printf("Delete at beginning: %f sec\n", (double)(end - start) / CLOCKS_PER_SEC);
+    for (int i = 0; i < 4; i++) {
+        int n = sizes[i];
+        int *arr = (int*)malloc(n * sizeof(int));
+        for (int j = 0; j < n; j++) arr[j] = j;
 
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        delete(n - 1);
-    end = clock();
-    printf("Delete at end: %f sec\n", (double)(end - start) / CLOCKS_PER_SEC);
+        start = clock();
+        for (int r = 0; r < 1000; r++)
+            linearSearch(arr, n, -1);
+        end = clock();
 
+        printf("%-12d %-15f\n", n, (double)(end - start) / CLOCKS_PER_SEC);
+        free(arr);
+    }
     return 0;
 }
