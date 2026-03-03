@@ -1,67 +1,49 @@
+// O(n log n)
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
-#define MAX 10000
-
-int arr[MAX];
-int n = 5000;
-
-void insert(int pos, int val) {
-    for (int i = n; i > pos; i--)
-        arr[i] = arr[i - 1];
-    arr[pos] = val;
-    n++;
+void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1, n2 = r - m;
+    int L[n1], R[n2];
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2)
+        arr[k++] = (L[i] <= R[j]) ? L[i++] : R[j++];
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
 }
 
-void delete(int pos) {
-    for (int i = pos; i < n - 1; i++)
-        arr[i] = arr[i + 1];
-    n--;
-}
-
-void traversal() {
-    for (int i = 0; i < n; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = (l + r) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
 }
 
 int main() {
+    int sizes[] = {1000, 5000, 10000, 50000};
     clock_t start, end;
 
-    for (int i = 0; i < n; i++)
-        arr[i] = i + 1;
+    printf("O(n log n) - Merge Sort\n");
+    printf("%-12s %-15s\n", "n", "Time(sec)");
+    printf("---------------------------\n");
 
-    start = clock();
-    traversal();
-    end = clock();
-    printf("Traversal time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
+    for (int i = 0; i < 4; i++) {
+        int n = sizes[i];
+        int *arr = (int*)malloc(n * sizeof(int));
+        for (int j = 0; j < n; j++) arr[j] = n - j;
 
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        insert(0, 99);
-    end = clock();
-    printf("Insertion at beginning time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
+        start = clock();
+        mergeSort(arr, 0, n - 1);
+        end = clock();
 
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        insert(n, 99);
-    end = clock();
-    printf("Insertion at end time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        delete(0);
-    end = clock();
-    printf("Deletion at beginning time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        delete(n - 1);
-    end = clock();
-    printf("Deletion at end time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
-
+        printf("%-12d %-15f\n", n, (double)(end - start) / CLOCKS_PER_SEC);
+        free(arr);
+    }
     return 0;
 }
