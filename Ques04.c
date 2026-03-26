@@ -1,67 +1,71 @@
+// Detect whether a loop exists in a linked list.
+
 #include <stdio.h>
-#include <time.h>
+#include <stdlib.h>
 
-#define MAX 10000
+struct node
+{
+    int data;
+    struct node *next;
+};
 
-int arr[MAX];
-int n = 5000;
-
-void insert(int pos, int val) {
-    for (int i = n; i > pos; i--)
-        arr[i] = arr[i - 1];
-    arr[pos] = val;
-    n++;
+struct node* createNode(int value)
+{
+    struct node *newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
 }
 
-void delete(int pos) {
-    for (int i = pos; i < n - 1; i++)
-        arr[i] = arr[i + 1];
-    n--;
+int detectLoop(struct node *head)
+{
+    struct node *slow = head;
+    struct node *fast = head;
+
+    while(fast != NULL && fast->next != NULL)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+
+        if(slow == fast)
+            return 1;   
+    }
+
+    return 0;
 }
 
-void traversal() {
-    for (int i = 0; i < n; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
+void display(struct node *head)
+{
+    struct node *temp = head;
+
+    while(temp != NULL)
+    {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
 }
 
-int main() {
-    clock_t start, end;
+int main()
+{
+    struct node *head;
 
-    for (int i = 0; i < n; i++)
-        arr[i] = i + 1;
+    struct node *n1 = createNode(10);
+    struct node *n2 = createNode(20);
+    struct node *n3 = createNode(30);
+    struct node *n4 = createNode(40);
 
-    start = clock();
-    traversal();
-    end = clock();
-    printf("Traversal time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
+    head = n1;
+    n1->next = n2;
+    n2->next = n3;
+    n3->next = n4;
 
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        insert(0, 99);
-    end = clock();
-    printf("Insertion at beginning time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
+    n4->next = n2;
 
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        insert(n, 99);
-    end = clock();
-    printf("Insertion at end time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        delete(0);
-    end = clock();
-    printf("Deletion at beginning time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-    n = 5000;
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        delete(n - 1);
-    end = clock();
-    printf("Deletion at end time: %f sec\n\n", (double)(end - start) / CLOCKS_PER_SEC);
+    if(detectLoop(head))
+        printf("Loop detected in linked list\n");
+    else
+        printf("No loop found\n");
 
     return 0;
 }
