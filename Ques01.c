@@ -1,71 +1,26 @@
-// Reverse a singly linked list (iterative method).
-
 #include <stdio.h>
-#include <stdlib.h>
 
-struct node
-{
-    int data;
-    struct node *next;
-};
-
-struct node* createNode(int value)
-{
-    struct node *newNode = (struct node*)malloc(sizeof(struct node));
-    newNode->data = value;
-    newNode->next = NULL;
-    return newNode;
-}
-
-struct node* reverseList(struct node *head)
-{
-    struct node *prev = NULL;
-    struct node *current = head;
-    struct node *next = NULL;
-
-    while(current != NULL)
-    {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    int arr[n];
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+    
+    int pos;
+    scanf("%d", &pos);
+    
+    // Shift elements left from pos onwards
+    for (int i = pos - 1; i < n - 1; i++)
+        arr[i] = arr[i + 1];
+    
+    // Print updated array
+    for (int i = 0; i < n - 1; i++) {
+        if (i > 0) printf(" ");
+        printf("%d", arr[i]);
     }
-
-    return prev;   
-}
-
-void display(struct node *head)
-{
-    struct node *temp = head;
-
-    while(temp != NULL)
-    {
-        printf("%d -> ", temp->data);
-        temp = temp->next;
-    }
-
-    printf("NULL\n");
-}
-
-int main()
-{
-    struct node *head;
-
-    struct node *n1 = createNode(10);
-    struct node *n2 = createNode(20);
-    struct node *n3 = createNode(30);
-
-    head = n1;
-    n1->next = n2;
-    n2->next = n3;
-
-    printf("Original List:\n");
-    display(head);
-
-    head = reverseList(head);
-
-    printf("Reversed List:\n");
-    display(head);
-
+    printf("\n");
+    
     return 0;
 }
