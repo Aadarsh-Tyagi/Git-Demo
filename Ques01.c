@@ -1,26 +1,44 @@
 #include <stdio.h>
 
 int main() {
-    int n;
-    scanf("%d", &n);
-    
-    int arr[n];
-    for (int i = 0; i < n; i++)
-        scanf("%d", &arr[i]);
-    
-    int pos;
-    scanf("%d", &pos);
-    
-    // Shift elements left from pos onwards
-    for (int i = pos - 1; i < n - 1; i++)
-        arr[i] = arr[i + 1];
-    
-    // Print updated array
-    for (int i = 0; i < n - 1; i++) {
-        if (i > 0) printf(" ");
-        printf("%d", arr[i]);
+    int p;
+    scanf("%d", &p);
+    int a[p];
+    for (int i = 0; i < p; i++)
+        scanf("%d", &a[i]);
+
+    int q;
+    scanf("%d", &q);
+    int b[q];
+    for (int i = 0; i < q; i++)
+        scanf("%d", &b[i]);
+
+    int i = 0, j = 0, first = 1;
+
+    // Merge step: pick smaller of the two current elements
+    while (i < p && j < q) {
+        if (!first) printf(" ");
+        if (a[i] <= b[j])
+            printf("%d", a[i++]);
+        else
+            printf("%d", b[j++]);
+        first = 0;
     }
+
+    // Append remaining elements from log 1
+    while (i < p) {
+        if (!first) printf(" ");
+        printf("%d", a[i++]);
+        first = 0;
+    }
+
+    // Append remaining elements from log 2
+    while (j < q) {
+        if (!first) printf(" ");
+        printf("%d", b[j++]);
+        first = 0;
+    }
+
     printf("\n");
-    
     return 0;
 }
