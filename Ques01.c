@@ -1,44 +1,28 @@
 #include <stdio.h>
 
 int main() {
-    int p;
-    scanf("%d", &p);
-    int a[p];
-    for (int i = 0; i < p; i++)
-        scanf("%d", &a[i]);
+    int n;
+    scanf("%d", &n);
 
-    int q;
-    scanf("%d", &q);
-    int b[q];
-    for (int i = 0; i < q; i++)
-        scanf("%d", &b[i]);
+    int arr[n];
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
 
-    int i = 0, j = 0, first = 1;
-
-    // Merge step: pick smaller of the two current elements
-    while (i < p && j < q) {
-        if (!first) printf(" ");
-        if (a[i] <= b[j])
-            printf("%d", a[i++]);
-        else
-            printf("%d", b[j++]);
-        first = 0;
+    // Two-pointer: i = slow (last unique), j = fast (explorer)
+    int i = 0;
+    for (int j = 1; j < n; j++) {
+        if (arr[j] != arr[i]) {
+            i++;
+            arr[i] = arr[j];
+        }
     }
 
-    // Append remaining elements from log 1
-    while (i < p) {
-        if (!first) printf(" ");
-        printf("%d", a[i++]);
-        first = 0;
+    // Print unique elements (indices 0 to i)
+    for (int k = 0; k <= i; k++) {
+        if (k > 0) printf(" ");
+        printf("%d", arr[k]);
     }
-
-    // Append remaining elements from log 2
-    while (j < q) {
-        if (!first) printf(" ");
-        printf("%d", b[j++]);
-        first = 0;
-    }
-
     printf("\n");
+
     return 0;
 }
