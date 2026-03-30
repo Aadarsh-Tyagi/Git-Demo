@@ -1,81 +1,25 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-struct Node {
-    int data;
-    struct Node* next;
-};
+void reverse(char str[], int left, int right) {
+    // Base case: pointers meet or cross
+    if (left >= right) return;
 
-struct Node* createNode(int data) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->next = NULL;
-    return newNode;
-}
+    // Swap characters at both ends
+    char temp = str[left];
+    str[left] = str[right];
+    str[right] = temp;
 
-struct Node* insertEnd(struct Node* head, int data) {
-    struct Node* newNode = createNode(data);
-    if (head == NULL) return newNode;
-    struct Node* temp = head;
-    while (temp->next != NULL)
-        temp = temp->next;
-    temp->next = newNode;
-    return head;
-}
-
-// Merge two sorted lists into one sorted list
-struct Node* mergeSorted(struct Node* a, struct Node* b) {
-    // Use a dummy head to simplify edge cases
-    struct Node dummy;
-    dummy.next = NULL;
-    struct Node* tail = &dummy;
-
-    while (a != NULL && b != NULL) {
-        if (a->data <= b->data) {
-            tail->next = a;
-            a = a->next;
-        } else {
-            tail->next = b;
-            b = b->next;
-        }
-        tail = tail->next;
-    }
-
-    // Attach remaining nodes
-    tail->next = (a != NULL) ? a : b;
-
-    return dummy.next;
-}
-
-void traverse(struct Node* head) {
-    int first = 1;
-    while (head != NULL) {
-        if (!first) printf(" ");
-        printf("%d", head->data);
-        head = head->next;
-        first = 0;
-    }
-    printf("\n");
+    // Recurse inward
+    reverse(str, left + 1, right - 1);
 }
 
 int main() {
-    int n;
-    scanf("%d", &n);
-    struct Node* listA = NULL;
-    for (int i = 0; i < n; i++) {
-        int val; scanf("%d", &val);
-        listA = insertEnd(listA, val);
-    }
+    char str[1000];
+    scanf("%s", str);
 
-    int m;
-    scanf("%d", &m);
-    struct Node* listB = NULL;
-    for (int i = 0; i < m; i++) {
-        int val; scanf("%d", &val);
-        listB = insertEnd(listB, val);
-    }
+    reverse(str, 0, strlen(str) - 1);
 
-    struct Node* merged = mergeSorted(listA, listB);
-    traverse(merged);
+    printf("%s\n", str);
     return 0;
 }
