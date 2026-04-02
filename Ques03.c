@@ -1,60 +1,112 @@
+// Delete a Node in Single Linked List
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-struct node {
+struct Node 
+{
     int data;
-    struct node *next;
+    struct Node* next;
 };
 
-struct node* deleteatbegin(struct node *head) {
-    if (head == NULL) return NULL;
-    struct node *temp = head;
-    head = head->next;
-    free(temp);
+struct Node* newNode(int val) 
+{
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = val;
+    node->next = NULL;
+    return node;
+}
+
+struct Node* deleteXthNode(struct Node* head, int x) 
+{
+    if (head == NULL)
+        return NULL;
+
+    if (x == 1) 
+    {
+        struct Node* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+
+    struct Node* curr = head;
+    int count = 1;
+
+    while (curr != NULL && count < x - 1) 
+    {
+        curr = curr->next;
+        count++;
+    }
+
+    struct Node* toDelete = curr->next;
+    curr->next = toDelete->next;
+    free(toDelete);
+
     return head;
 }
 
-struct node* deleteatend(struct node *head) {
-    if (head == NULL) return NULL;
-    if (head->next == NULL) { free(head); return NULL; }
-    struct node *temp = head;
-    while (temp->next->next != NULL)
+void printList(struct Node* head) 
+{
+    struct Node* temp = head;
+    while (temp != NULL) 
+    {
+        printf("%d", temp->data);
+        if (temp->next != NULL)
+            printf(" -> ");
         temp = temp->next;
-    free(temp->next);
-    temp->next = NULL;
-    return head;
+    }
+    printf(" -> NULL\n");
 }
 
-int main() {
-    struct node *head = NULL;
-    clock_t start, end;
+int main() 
+{
+    struct Node* head1 = newNode(1);
+    head1->next = newNode(2);
+    head1->next->next = newNode(3);
+    head1->next->next->next = newNode(4);
+    head1->next->next->next->next = newNode(5);
 
-    for (int i = 0; i < 5000; i++) {
-        struct node *newnode = (struct node*)malloc(sizeof(struct node));
-        newnode->data = i + 1;
-        newnode->next = head;
-        head = newnode;
-    }
+    printf("Before: ");
+    printList(head1);
+    head1 = deleteXthNode(head1, 3);
+    printf("After (x=3): ");
+    printList(head1);
 
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        head = deleteatbegin(head);
-    end = clock();
-    printf("Delete at beginning: %f sec\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("\n");
 
-    for (int i = 0; i < 5000; i++) {
-        struct node *newnode = (struct node*)malloc(sizeof(struct node));
-        newnode->data = i + 1;
-        newnode->next = head;
-        head = newnode;
-    }
+    struct Node* head2 = newNode(10);
+    head2->next = newNode(20);
+    head2->next->next = newNode(30);
 
-    start = clock();
-    for (int r = 0; r < 1000; r++)
-        head = deleteatend(head);
-    end = clock();
-    printf("Delete at end: %f sec\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("Before: ");
+    printList(head2);
+    head2 = deleteXthNode(head2, 1);
+    printf("After (x=1): ");
+    printList(head2);
+
+    printf("\n");
+
+    struct Node* head3 = newNode(5);
+    head3->next = newNode(10);
+    head3->next->next = newNode(15);
+    head3->next->next->next = newNode(20);
+
+    printf("Before: ");
+    printList(head3);
+    head3 = deleteXthNode(head3, 4);
+    printf("After (x=4): ");
+    printList(head3);
+
+    printf("\n");
+
+    struct Node* head4 = newNode(42);
+    printf("Before: ");
+    printList(head4);
+    head4 = deleteXthNode(head4, 1);
+    printf("After (x=1): ");
+    if (head4 == NULL)
+        printf("NULL\n");
 
     return 0;
 }
