@@ -1,71 +1,78 @@
-// Detect whether a loop exists in a linked list.
+// Linked List Insertion at end
 
 #include <stdio.h>
 #include <stdlib.h>
 
-struct node
+struct Node 
 {
     int data;
-    struct node *next;
+    struct Node* next;
 };
 
-struct node* createNode(int value)
+struct Node* newNode(int val) 
 {
-    struct node *newNode = (struct node*)malloc(sizeof(struct node));
-    newNode->data = value;
-    newNode->next = NULL;
-    return newNode;
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = val;
+    node->next = NULL;
+    return node;
 }
 
-int detectLoop(struct node *head)
+struct Node* insertAtEnd(struct Node* head, int x) 
 {
-    struct node *slow = head;
-    struct node *fast = head;
+    struct Node* temp = newNode(x);
 
-    while(fast != NULL && fast->next != NULL)
-    {
-        slow = slow->next;
-        fast = fast->next->next;
+    if (head == NULL)
+        return temp;
 
-        if(slow == fast)
-            return 1;   
-    }
+    struct Node* curr = head;
+    while (curr->next != NULL)
+        curr = curr->next;
 
-    return 0;
+    curr->next = temp;
+    return head;
 }
 
-void display(struct node *head)
+void printList(struct Node* head) 
 {
-    struct node *temp = head;
-
-    while(temp != NULL)
+    struct Node* temp = head;
+    while (temp != NULL) 
     {
-        printf("%d -> ", temp->data);
+        printf("%d", temp->data);
+        if (temp->next != NULL)
+            printf(" -> ");
         temp = temp->next;
     }
-    printf("NULL\n");
+    printf(" -> NULL\n");
 }
 
-int main()
+int main() 
 {
-    struct node *head;
+    struct Node* head1 = newNode(1);
+    head1->next = newNode(2);
+    head1->next->next = newNode(3);
 
-    struct node *n1 = createNode(10);
-    struct node *n2 = createNode(20);
-    struct node *n3 = createNode(30);
-    struct node *n4 = createNode(40);
+    printf("Before: ");
+    printList(head1);
+    head1 = insertAtEnd(head1, 4);
+    printf("After:  ");
+    printList(head1);
 
-    head = n1;
-    n1->next = n2;
-    n2->next = n3;
-    n3->next = n4;
+    printf("\n");
 
-    n4->next = n2;
+    struct Node* head2 = NULL;
+    printf("Before: NULL\n");
+    head2 = insertAtEnd(head2, 5);
+    printf("After:  ");
+    printList(head2);
 
-    if(detectLoop(head))
-        printf("Loop detected in linked list\n");
-    else
-        printf("No loop found\n");
+    printf("\n");
+
+    struct Node* head3 = newNode(10);
+    printf("Before: ");
+    printList(head3);
+    head3 = insertAtEnd(head3, 20);
+    printf("After:  ");
+    printList(head3);
 
     return 0;
 }
