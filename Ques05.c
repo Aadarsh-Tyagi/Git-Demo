@@ -1,38 +1,74 @@
-// O(n^2)
+// Count nodes of linked list
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-void bubbleSort(int arr[], int n) {
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n - i - 1; j++)
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
+struct Node 
+{
+    int data;
+    struct Node* next;
+};
+
+struct Node* newNode(int val) 
+{
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = val;
+    node->next = NULL;
+    return node;
 }
 
-int main() {
-    int sizes[] = {500, 1000, 2000, 4000};
-    clock_t start, end;
+int getLength(struct Node* head) 
+{
+    int count = 0;
+    struct Node* curr = head;
 
-    printf("O(n^2) - Bubble Sort\n");
-    printf("%-12s %-15s\n", "n", "Time(sec)");
-    printf("---------------------------\n");
-
-    for (int i = 0; i < 4; i++) {
-        int n = sizes[i];
-        int *arr = (int*)malloc(n * sizeof(int));
-        for (int j = 0; j < n; j++) arr[j] = n - j;
-
-        start = clock();
-        bubbleSort(arr, n);
-        end = clock();
-
-        printf("%-12d %-15f\n", n, (double)(end - start) / CLOCKS_PER_SEC);
-        free(arr);
+    while (curr != NULL) 
+    {
+        count++;
+        curr = curr->next;
     }
+
+    return count;
+}
+
+void printList(struct Node* head) 
+{
+    struct Node* temp = head;
+    while (temp != NULL) 
+    {
+        printf("%d", temp->data);
+        if (temp->next != NULL)
+            printf(" -> ");
+        temp = temp->next;
+    }
+    printf(" -> NULL\n");
+}
+
+int main() 
+{
+    struct Node* head1 = newNode(1);
+    head1->next = newNode(2);
+    head1->next->next = newNode(3);
+    head1->next->next->next = newNode(4);
+    head1->next->next->next->next = newNode(5);
+
+    printList(head1);
+    printf("Length: %d\n", getLength(head1));
+
+    printf("\n");
+
+    struct Node* head2 = newNode(10);
+    printList(head2);
+    printf("Length: %d\n", getLength(head2));
+
+    printf("\n");
+
+    struct Node* head3 = newNode(5);
+    head3->next = newNode(10);
+    head3->next->next = newNode(15);
+
+    printList(head3);
+    printf("Length: %d\n", getLength(head3));
+
     return 0;
 }
