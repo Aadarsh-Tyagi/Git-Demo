@@ -1,77 +1,63 @@
-// Detect Loop in linked list
+// Implement queue using two stacks
 
 #include <stdio.h>
-#include <stdlib.h>
+#define MAX 100
 
-struct Node 
-{
-    int data;
-    struct Node* next;
-};
+int stack1[MAX], stack2[MAX];
+int top1 = -1, top2 = -1;
 
-struct Node* newNode(int val) 
-{
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->data = val;
-    node->next = NULL;
-    return node;
+// Push into stack1
+void enqueue(int x) {
+    if (top1 == MAX - 1) {
+        printf("Queue Overflow\n");
+        return;
+    }
+    stack1[++top1] = x;
 }
 
-int detectLoop(struct Node* head) 
-{
-    if (head == NULL || head->next == NULL)
-        return 0;
+// Pop from stack2
+int dequeue() {
+    if (top2 == -1) {
+        if (top1 == -1) {
+            printf("Queue Underflow\n");
+            return -1;
+        }
+        // Transfer elements
+        while (top1 != -1) {
+            stack2[++top2] = stack1[top1--];
+        }
+    }
+    return stack2[top2--];
+}
 
-    struct Node* slow = head;
-    struct Node* fast = head;
-
-    while (fast != NULL && fast->next != NULL) 
-    {
-        slow = slow->next;
-        fast = fast->next->next;
-
-        if (slow == fast)
-            return 1;
+// Display queue
+void display() {
+    if (top1 == -1 && top2 == -1) {
+        printf("Queue is empty\n");
+        return;
     }
 
-    return 0; 
+    // Elements in stack2 (front part)
+    for (int i = top2; i >= 0; i--)
+        printf("%d ", stack2[i]);
+
+    // Elements in stack1 (rear part)
+    for (int i = 0; i <= top1; i++)
+        printf("%d ", stack1[i]);
+
+    printf("\n");
 }
 
-int main() 
-{
-    struct Node* head1 = newNode(1);
-    head1->next = newNode(2);
-    head1->next->next = newNode(3);
-    head1->next->next->next = newNode(4);
-    head1->next->next->next->next = newNode(5);
-    head1->next->next->next->next->next = head1->next; 
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
 
-    printf("Test 1 (loop at pos 2):  %s\n", detectLoop(head1) ? "true" : "false");
+    printf("Dequeued: %d\n", dequeue());
+    display();
 
-    struct Node* head2 = newNode(3);
-    head2->next = newNode(4);
-    head2->next->next = newNode(5);
-    head2->next->next->next = head2; 
-
-    printf("Test 2 (loop at pos 1):  %s\n", detectLoop(head2) ? "true" : "false");
-
-    struct Node* head3 = newNode(1);
-    head3->next = newNode(2);
-    head3->next->next = newNode(3);
-
-    printf("Test 3 (no loop):        %s\n", detectLoop(head3) ? "true" : "false");
-
-    struct Node* head4 = newNode(1);
-    printf("Test 4 (single node):    %s\n", detectLoop(head4) ? "true" : "false");
-
-    struct Node* head5 = newNode(1);
-    head5->next = head5;
-    printf("Test 5 (self loop):      %s\n", detectLoop(head5) ? "true" : "false");
-
-    struct Node* head6 = newNode(1);
-    head6->next = newNode(2);
-    head6->next->next = head6;
-    printf("Test 6 (two node loop):  %s\n", detectLoop(head6) ? "true" : "false");
+    enqueue(40);
+    display();
 
     return 0;
 }
