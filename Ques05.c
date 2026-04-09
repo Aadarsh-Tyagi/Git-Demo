@@ -1,74 +1,82 @@
-// Count nodes of linked list
+// Implementation of stack 
 
 #include <stdio.h>
-#include <stdlib.h>
 
-struct Node 
-{
-    int data;
-    struct Node* next;
-};
+#define MAX 5
 
-struct Node* newNode(int val) 
-{
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->data = val;
-    node->next = NULL;
-    return node;
-}
+int stack[MAX];
+int top = -1;
 
-int getLength(struct Node* head) 
-{
-    int count = 0;
-    struct Node* curr = head;
-
-    while (curr != NULL) 
-    {
-        count++;
-        curr = curr->next;
+void push(int value) {
+    if (top == MAX - 1) {
+        printf("Stack Overflow\n");
+    } else {
+        top++;
+        stack[top] = value;
+        printf("Inserted: %d\n", value);
     }
-
-    return count;
 }
 
-void printList(struct Node* head) 
-{
-    struct Node* temp = head;
-    while (temp != NULL) 
-    {
-        printf("%d", temp->data);
-        if (temp->next != NULL)
-            printf(" -> ");
-        temp = temp->next;
+void pop() {
+    if (top == -1) {
+        printf("Stack Underflow\n");
+    } else {
+        printf("Deleted: %d\n", stack[top]);
+        top--;
     }
-    printf(" -> NULL\n");
 }
 
-int main() 
-{
-    struct Node* head1 = newNode(1);
-    head1->next = newNode(2);
-    head1->next->next = newNode(3);
-    head1->next->next->next = newNode(4);
-    head1->next->next->next->next = newNode(5);
+void peek() {
+    if (top == -1) {
+        printf("Stack is Empty\n");
+    } else {
+        printf("Top element: %d\n", stack[top]);
+    }
+}
 
-    printList(head1);
-    printf("Length: %d\n", getLength(head1));
+void display() {
+    if (top == -1) {
+        printf("Stack is Empty\n");
+    } else {
+        printf("Stack elements:\n");
+        for (int i = top; i >= 0; i--) {
+            printf("%d\n", stack[i]);
+        }
+    }
+}
 
-    printf("\n");
+int main() {
+    int choice, value;
 
-    struct Node* head2 = newNode(10);
-    printList(head2);
-    printf("Length: %d\n", getLength(head2));
+    while (1) {
+        printf("\n1.Push\n2.Pop\n3.Peek\n4.Display\n5.Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
 
-    printf("\n");
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                push(value);
+                break;
 
-    struct Node* head3 = newNode(5);
-    head3->next = newNode(10);
-    head3->next->next = newNode(15);
+            case 2:
+                pop();
+                break;
 
-    printList(head3);
-    printf("Length: %d\n", getLength(head3));
+            case 3:
+                peek();
+                break;
 
-    return 0;
+            case 4:
+                display();
+                break;
+
+            case 5:
+                return 0;
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
 }
