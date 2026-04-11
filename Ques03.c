@@ -1,112 +1,110 @@
-// Delete a Node in Single Linked List
+// Implement two stack in a single array with additioanl functions
+
 
 #include <stdio.h>
-#include <stdlib.h>
+#define MAX 10
 
-struct Node 
-{
-    int data;
-    struct Node* next;
-};
+int arr[MAX];
+int top1 = -1;
+int top2 = MAX;
 
-struct Node* newNode(int val) 
-{
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->data = val;
-    node->next = NULL;
-    return node;
+// Check if full
+int isFull() {
+    return (top1 + 1 == top2);
 }
 
-struct Node* deleteXthNode(struct Node* head, int x) 
-{
-    if (head == NULL)
-        return NULL;
-
-    if (x == 1) 
-    {
-        struct Node* temp = head;
-        head = head->next;
-        free(temp);
-        return head;
-    }
-
-    struct Node* curr = head;
-    int count = 1;
-
-    while (curr != NULL && count < x - 1) 
-    {
-        curr = curr->next;
-        count++;
-    }
-
-    struct Node* toDelete = curr->next;
-    curr->next = toDelete->next;
-    free(toDelete);
-
-    return head;
+// Check if Stack1 is empty
+int isEmpty1() {
+    return (top1 == -1);
 }
 
-void printList(struct Node* head) 
-{
-    struct Node* temp = head;
-    while (temp != NULL) 
-    {
-        printf("%d", temp->data);
-        if (temp->next != NULL)
-            printf(" -> ");
-        temp = temp->next;
-    }
-    printf(" -> NULL\n");
+// Check if Stack2 is empty
+int isEmpty2() {
+    return (top2 == MAX);
 }
 
-int main() 
-{
-    struct Node* head1 = newNode(1);
-    head1->next = newNode(2);
-    head1->next->next = newNode(3);
-    head1->next->next->next = newNode(4);
-    head1->next->next->next->next = newNode(5);
+// Push into Stack1
+void push1(int x) {
+    if (isFull()) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    arr[++top1] = x;
+}
 
-    printf("Before: ");
-    printList(head1);
-    head1 = deleteXthNode(head1, 3);
-    printf("After (x=3): ");
-    printList(head1);
+// Push into Stack2
+void push2(int x) {
+    if (isFull()) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    arr[--top2] = x;
+}
+
+// Pop from Stack1
+int pop1() {
+    if (isEmpty1()) {
+        printf("Stack1 Underflow\n");
+        return -1;
+    }
+    return arr[top1--];
+}
+
+// Pop from Stack2
+int pop2() {
+    if (isEmpty2()) {
+        printf("Stack2 Underflow\n");
+        return -1;
+    }
+    return arr[top2++];
+}
+
+// Peek Stack1
+int peek1() {
+    if (isEmpty1()) {
+        printf("Stack1 is empty\n");
+        return -1;
+    }
+    return arr[top1];
+}
+
+// Peek Stack2
+int peek2() {
+    if (isEmpty2()) {
+        printf("Stack2 is empty\n");
+        return -1;
+    }
+    return arr[top2];
+}
+
+// Display both stacks
+void display() {
+    printf("Stack1: ");
+    for (int i = 0; i <= top1; i++)
+        printf("%d ", arr[i]);
+
+    printf("\nStack2: ");
+    for (int i = MAX - 1; i >= top2; i--)
+        printf("%d ", arr[i]);
 
     printf("\n");
+}
 
-    struct Node* head2 = newNode(10);
-    head2->next = newNode(20);
-    head2->next->next = newNode(30);
+int main() {
+    push1(10);
+    push1(20);
+    push2(100);
+    push2(200);
 
-    printf("Before: ");
-    printList(head2);
-    head2 = deleteXthNode(head2, 1);
-    printf("After (x=1): ");
-    printList(head2);
+    display();
 
-    printf("\n");
+    printf("Peek Stack1: %d\n", peek1());
+    printf("Peek Stack2: %d\n", peek2());
 
-    struct Node* head3 = newNode(5);
-    head3->next = newNode(10);
-    head3->next->next = newNode(15);
-    head3->next->next->next = newNode(20);
+    printf("Pop Stack1: %d\n", pop1());
+    printf("Pop Stack2: %d\n", pop2());
 
-    printf("Before: ");
-    printList(head3);
-    head3 = deleteXthNode(head3, 4);
-    printf("After (x=4): ");
-    printList(head3);
-
-    printf("\n");
-
-    struct Node* head4 = newNode(42);
-    printf("Before: ");
-    printList(head4);
-    head4 = deleteXthNode(head4, 1);
-    printf("After (x=1): ");
-    if (head4 == NULL)
-        printf("NULL\n");
+    display();
 
     return 0;
 }
