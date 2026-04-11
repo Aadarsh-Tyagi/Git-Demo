@@ -1,78 +1,92 @@
-// Linked List Insertion at end
+// Implement queue using two stacks with additional features
 
 #include <stdio.h>
-#include <stdlib.h>
+#define MAX 100
 
-struct Node 
-{
-    int data;
-    struct Node* next;
-};
+int stack1[MAX], stack2[MAX];
+int top1 = -1, top2 = -1;
 
-struct Node* newNode(int val) 
-{
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->data = val;
-    node->next = NULL;
-    return node;
+// Check if queue is empty
+int isEmpty() {
+    return (top1 == -1 && top2 == -1);
 }
 
-struct Node* insertAtEnd(struct Node* head, int x) 
-{
-    struct Node* temp = newNode(x);
-
-    if (head == NULL)
-        return temp;
-
-    struct Node* curr = head;
-    while (curr->next != NULL)
-        curr = curr->next;
-
-    curr->next = temp;
-    return head;
+// Check if queue is full
+int isFull() {
+    return (top1 == MAX - 1);
 }
 
-void printList(struct Node* head) 
-{
-    struct Node* temp = head;
-    while (temp != NULL) 
-    {
-        printf("%d", temp->data);
-        if (temp->next != NULL)
-            printf(" -> ");
-        temp = temp->next;
+// Enqueue
+void enqueue(int x) {
+    if (isFull()) {
+        printf("Queue Overflow\n");
+        return;
     }
-    printf(" -> NULL\n");
+    stack1[++top1] = x;
 }
 
-int main() 
-{
-    struct Node* head1 = newNode(1);
-    head1->next = newNode(2);
-    head1->next->next = newNode(3);
+// Dequeue
+int dequeue() {
+    if (isEmpty()) {
+        printf("Queue Underflow\n");
+        return -1;
+    }
 
-    printf("Before: ");
-    printList(head1);
-    head1 = insertAtEnd(head1, 4);
-    printf("After:  ");
-    printList(head1);
+    if (top2 == -1) {
+        while (top1 != -1) {
+            stack2[++top2] = stack1[top1--];
+        }
+    }
+    return stack2[top2--];
+}
+
+// Peek (Front element)
+int peek() {
+    if (isEmpty()) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+
+    if (top2 == -1) {
+        while (top1 != -1) {
+            stack2[++top2] = stack1[top1--];
+        }
+    }
+    return stack2[top2];
+}
+
+// Display queue
+void display() {
+    if (isEmpty()) {
+        printf("Queue is empty\n");
+        return;
+    }
+
+    // stack2 = front part
+    for (int i = top2; i >= 0; i--)
+        printf("%d ", stack2[i]);
+
+    // stack1 = rear part
+    for (int i = 0; i <= top1; i++)
+        printf("%d ", stack1[i]);
 
     printf("\n");
+}
 
-    struct Node* head2 = NULL;
-    printf("Before: NULL\n");
-    head2 = insertAtEnd(head2, 5);
-    printf("After:  ");
-    printList(head2);
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
 
-    printf("\n");
+    display();
 
-    struct Node* head3 = newNode(10);
-    printf("Before: ");
-    printList(head3);
-    head3 = insertAtEnd(head3, 20);
-    printf("After:  ");
-    printList(head3);
+    printf("Peek: %d\n", peek());
+
+    printf("Dequeued: %d\n", dequeue());
+    display();
+
+    enqueue(40);
+    display();
 
     return 0;
 }
