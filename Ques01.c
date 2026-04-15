@@ -1,83 +1,141 @@
-// Implement two stack in a single array
+// All operations 
 
 #include <stdio.h>
-#define MAX 10
+#define MAX 100
 
-int arr[MAX];
-int top1 = -1;
-int top2 = MAX;
+int queue[MAX];
+int front = -1, rear = -1;
 
-// Push into Stack1
-void push1(int x) 
+// Enqueue
+void enqueue(int x) 
 {
-    if (top1 + 1 == top2) 
+    if (rear == MAX - 1) 
     {
-        printf("Stack Overflow\n");
+        printf("Queue Overflow\n");
         return;
     }
-    arr[++top1] = x;
+    if (front == -1)
+        front = 0;
+    queue[++rear] = x;
+    printf("%d inserted\n", x);
 }
 
-// Push into Stack2
-void push2(int x) 
+// Dequeue
+void dequeue() 
 {
-    if (top1 + 1 == top2) 
+    if (front == -1 || front > rear) 
     {
-        printf("Stack Overflow\n");
+        printf("Queue Underflow\n");
         return;
     }
-    arr[--top2] = x;
+    printf("%d deleted\n", queue[front++]);
 }
 
-// Pop from Stack1
-int pop1() 
+// Peek (Front)
+void peek() 
 {
-    if (top1 == -1) 
+    if (front == -1 || front > rear) 
     {
-        printf("Stack1 Underflow\n");
-        return -1;
+        printf("Queue is empty\n");
+        return;
     }
-    return arr[top1--];
+    printf("Front element: %d\n", queue[front]);
 }
 
-// Pop from Stack2
-int pop2() 
+// Rear element
+void getRear() 
 {
-    if (top2 == MAX) 
+    if (rear == -1 || front > rear) 
     {
-        printf("Stack2 Underflow\n");
-        return -1;
+        printf("Queue is empty\n");
+        return;
     }
-    return arr[top2++];
+    printf("Rear element: %d\n", queue[rear]);
 }
 
-// Display both stacks
+// Check empty
+void isEmpty() 
+{
+    if (front == -1 || front > rear)
+        printf("Queue is empty\n");
+    else
+        printf("Queue is not empty\n");
+}
+
+// Check full
+void isFull() 
+{
+    if (rear == MAX - 1)
+        printf("Queue is full\n");
+    else
+        printf("Queue is not full\n");
+}
+
+// Display queue
 void display() 
 {
-    printf("Stack1: ");
-    for (int i = 0; i <= top1; i++)
-        printf("%d ", arr[i]);
-
-    printf("\nStack2: ");
-    for (int i = MAX - 1; i >= top2; i--)
-        printf("%d ", arr[i]);
-
+    if (front == -1 || front > rear) 
+    {
+        printf("Queue is empty\n");
+        return;
+    }
+    printf("Queue elements: ");
+    for (int i = front; i <= rear; i++) 
+    {
+        printf("%d ", queue[i]);
+    }
     printf("\n");
 }
 
+// Main function (Menu-driven)
 int main() 
 {
-    push1(10);
-    push1(20);
-    push2(100);
-    push2(200);
+    int choice, value;
 
-    display();
+    while (1) 
+    {
+        printf("\n--- QUEUE MENU ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek (Front)\n");
+        printf("4. Rear\n");
+        printf("5. isEmpty\n");
+        printf("6. isFull\n");
+        printf("7. Display\n");
+        printf("8. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    printf("Pop Stack1: %d\n", pop1());
-    printf("Pop Stack2: %d\n", pop2());
-
-    display();
-
-    return 0;
+        switch (choice) 
+        {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                peek();
+                break;
+            case 4:
+                getRear();
+                break;
+            case 5:
+                isEmpty();
+                break;
+            case 6:
+                isFull();
+                break;
+            case 7:
+                display();
+                break;
+            case 8:
+                printf("Exiting...\n");
+                return 0;
+            default:
+                printf("Invalid choice\n");
+        }
+    }
 }
