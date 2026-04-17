@@ -1,141 +1,39 @@
-// All operations 
+// Implement insertion using binary search tree
 
 #include <stdio.h>
-#define MAX 100
+#include <stdlib.h>
 
-int queue[MAX];
-int front = -1, rear = -1;
-
-// Enqueue
-void enqueue(int x) 
+// node structure
+struct Node 
 {
-    if (rear == MAX - 1) 
-    {
-        printf("Queue Overflow\n");
-        return;
-    }
-    if (front == -1)
-        front = 0;
-    queue[++rear] = x;
-    printf("%d inserted\n", x);
+    int data;
+    struct Node* right;      
+    struct Node* left;
+};
+
+// node creation
+struct Node* newnode (int value)
+{
+    struct Node* newnode = (struct Node*)malloc(sizeof(struct Node));
+    newnode -> data = value;                                             
+    newnode -> left = NULL;
+    newnode -> right = NULL;
+    return newnode ;
 }
 
-// Dequeue
-void dequeue() 
+// node insertion
+struct Node* insert(struct Node* root , int value)
 {
-    if (front == -1 || front > rear) 
-    {
-        printf("Queue Underflow\n");
-        return;
-    }
-    printf("%d deleted\n", queue[front++]);
+    if (root == NULL)
+       return newnode(value);   
+
+    if (value < root -> data)
+       root -> left = insert(root -> left , value);
+
+    else if (value > root -> data)
+       root -> right = insert(root -> right , value);
+    
+    return root ;   
 }
 
-// Peek (Front)
-void peek() 
-{
-    if (front == -1 || front > rear) 
-    {
-        printf("Queue is empty\n");
-        return;
-    }
-    printf("Front element: %d\n", queue[front]);
-}
-
-// Rear element
-void getRear() 
-{
-    if (rear == -1 || front > rear) 
-    {
-        printf("Queue is empty\n");
-        return;
-    }
-    printf("Rear element: %d\n", queue[rear]);
-}
-
-// Check empty
-void isEmpty() 
-{
-    if (front == -1 || front > rear)
-        printf("Queue is empty\n");
-    else
-        printf("Queue is not empty\n");
-}
-
-// Check full
-void isFull() 
-{
-    if (rear == MAX - 1)
-        printf("Queue is full\n");
-    else
-        printf("Queue is not full\n");
-}
-
-// Display queue
-void display() 
-{
-    if (front == -1 || front > rear) 
-    {
-        printf("Queue is empty\n");
-        return;
-    }
-    printf("Queue elements: ");
-    for (int i = front; i <= rear; i++) 
-    {
-        printf("%d ", queue[i]);
-    }
-    printf("\n");
-}
-
-// Main function (Menu-driven)
-int main() 
-{
-    int choice, value;
-
-    while (1) 
-    {
-        printf("\n--- QUEUE MENU ---\n");
-        printf("1. Enqueue\n");
-        printf("2. Dequeue\n");
-        printf("3. Peek (Front)\n");
-        printf("4. Rear\n");
-        printf("5. isEmpty\n");
-        printf("6. isFull\n");
-        printf("7. Display\n");
-        printf("8. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) 
-        {
-            case 1:
-                printf("Enter value: ");
-                scanf("%d", &value);
-                enqueue(value);
-                break;
-            case 2:
-                dequeue();
-                break;
-            case 3:
-                peek();
-                break;
-            case 4:
-                getRear();
-                break;
-            case 5:
-                isEmpty();
-                break;
-            case 6:
-                isFull();
-                break;
-            case 7:
-                display();
-                break;
-            case 8:
-                printf("Exiting...\n");
-                return 0;
-            default:
-                printf("Invalid choice\n");
-        }
-    }
-}
+// inorder traversal
