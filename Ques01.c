@@ -1,37 +1,30 @@
 #include <stdio.h>
 
-#define MAX 100
-
-int queue[MAX];
-int front = 0, rear = -1;
-
-// Enqueue
-void enqueue(int value) {
-    if (rear == MAX - 1) {
-        return; // simple overflow handling
-    }
-    rear++;
-    queue[rear] = value;
-}
-
-// Display
-void display() {
-    for (int i = front; i <= rear; i++) {
-        printf("%d ", queue[i]);
-    }
-}
-
 int main() {
-    int n, x;
+    int m, n;
+    scanf("%d %d", &m, &n);
 
-    scanf("%d", &n);
+    int mat[m][n];
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &mat[i][j]);
 
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &x);
-        enqueue(x);
+    // Step 1: Must be a square matrix
+    if (m != n) {
+        printf("Not a Symmetric Matrix\n");
+        return 0;
     }
 
-    display();
+    // Step 2: Check mat[i][j] == mat[j][i] for all i, j
+    int isSymmetric = 1;
+    for (int i = 0; i < m && isSymmetric; i++) {
+        for (int j = 0; j < n && isSymmetric; j++) {
+            if (mat[i][j] != mat[j][i]) {
+                isSymmetric = 0;
+            }
+        }
+    }
 
+    printf("%s\n", isSymmetric ? "Symmetric Matrix" : "Not a Symmetric Matrix");
     return 0;
 }
