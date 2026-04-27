@@ -1,30 +1,22 @@
 #include <stdio.h>
 
 int main() {
-    int m, n;
-    scanf("%d %d", &m, &n);
+    int n;
+    scanf("%d", &n);
 
-    int mat[m][n];
-    for (int i = 0; i < m; i++)
-        for (int j = 0; j < n; j++)
-            scanf("%d", &mat[i][j]);
+    int arr[n];
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
 
-    // Step 1: Must be a square matrix
-    if (m != n) {
-        printf("Not a Symmetric Matrix\n");
-        return 0;
+    int max = arr[0], min = arr[0];
+
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max) max = arr[i];
+        if (arr[i] < min) min = arr[i];
     }
 
-    // Step 2: Check mat[i][j] == mat[j][i] for all i, j
-    int isSymmetric = 1;
-    for (int i = 0; i < m && isSymmetric; i++) {
-        for (int j = 0; j < n && isSymmetric; j++) {
-            if (mat[i][j] != mat[j][i]) {
-                isSymmetric = 0;
-            }
-        }
-    }
+    printf("Max: %d\n", max);
+    printf("Min: %d\n", min);
 
-    printf("%s\n", isSymmetric ? "Symmetric Matrix" : "Not a Symmetric Matrix");
     return 0;
 }
