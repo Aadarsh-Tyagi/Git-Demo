@@ -1,105 +1,81 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
-// Node structure
+// Node structure for stack
 struct Node {
     int data;
     struct Node* next;
 };
 
-// Create node
-struct Node* createNode(int value) {
+// Push
+void push(struct Node** top, int value) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = value;
-    newNode->next = NULL;
-    return newNode;
+    newNode->next = *top;
+    *top = newNode;
 }
 
-// Insert at end
-struct Node* insertEnd(struct Node* head, int value) {
-    struct Node* newNode = createNode(value);
-
-    if (head == NULL)
-        return newNode;
-
-    struct Node* temp = head;
-    while (temp->next != NULL)
-        temp = temp->next;
-
-    temp->next = newNode;
-    return head;
-}
-
-// Get length
-int getLength(struct Node* head) {
-    int count = 0;
-    while (head != NULL) {
-        count++;
-        head = head->next;
+// Pop
+int pop(struct Node** top) {
+    if (*top == NULL) {
+        return 0; // simple handling
     }
-    return count;
+    struct Node* temp = *top;
+    int value = temp->data;
+    *top = temp->next;
+    free(temp);
+    return value;
 }
 
-// Rotate right by k
-struct Node* rotateRight(struct Node* head, int k) {
-    if (head == NULL || head->next == NULL || k == 0)
-        return head;
+// Evaluate postfix
+int evaluate(char* exp) {
+    struct Node* top = NULL;
+    int i = 0;
 
-    int n = getLength(head);
-    k = k % n;  // important
+    while (exp[i] != '\0') {
 
-    if (k == 0)
-        return head;
+        // Skip spaces
+        if (exp[i] == ' ') {
+            i++;
+            continue;
+        }
 
-    struct Node* temp = head;
+        // If digit → push
+        if (isdigit(exp[i])) {
+            push(&top, exp[i] - '0');
+        }
+        // Operator
+        else {
+            int b = pop(&top);
+            int a = pop(&top);
+            int result;
 
-    // go to last node
-    while (temp->next != NULL)
-        temp = temp->next;
+            switch (exp[i]) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = a / b; break;
+            }
 
-    // make circular
-    temp->next = head;
+            push(&top, result);
+        }
 
-    // move to (n-k)th node
-    int steps = n - k;
-    struct Node* newTail = head;
-
-    for (int i = 1; i < steps; i++) {
-        newTail = newTail->next;
+        i++;
     }
 
-    struct Node* newHead = newTail->next;
-
-    // break circle
-    newTail->next = NULL;
-
-    return newHead;
-}
-
-// Display
-void display(struct Node* head) {
-    while (head != NULL) {
-        printf("%d ", head->data);
-        head = head->next;
-    }
+    return pop(&top);
 }
 
 int main() {
-    int n, x, k;
-    struct Node* head = NULL;
+    char exp[100];
 
-    scanf("%d", &n);
+    // Read full line including spaces
+    fgets(exp, sizeof(exp), stdin);
 
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &x);
-        head = insertEnd(head, x);
-    }
+    int result = evaluate(exp);
 
-    scanf("%d", &k);
-
-    head = rotateRight(head, k);
-
-    display(head);
+    printf("%d", result);
 
     return 0;
 }
