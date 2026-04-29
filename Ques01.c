@@ -1,81 +1,81 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 
-// Node structure for stack
 struct Node {
     int data;
     struct Node* next;
 };
 
-// Push
-void push(struct Node** top, int value) {
+struct Node* createNode(int data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = value;
-    newNode->next = *top;
-    *top = newNode;
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
 }
 
-// Pop
-int pop(struct Node** top) {
-    if (*top == NULL) {
-        return 0; // simple handling
-    }
-    struct Node* temp = *top;
-    int value = temp->data;
-    *top = temp->next;
-    free(temp);
-    return value;
+struct Node* insertEnd(struct Node* head, int data) {
+    struct Node* newNode = createNode(data);
+    if (head == NULL) return newNode;
+    struct Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+    temp->next = newNode;
+    return head;
 }
 
-// Evaluate postfix
-int evaluate(char* exp) {
-    struct Node* top = NULL;
-    int i = 0;
+// Merge two sorted lists into one sorted list
+struct Node* mergeSorted(struct Node* a, struct Node* b) {
+    // Use a dummy head to simplify edge cases
+    struct Node dummy;
+    dummy.next = NULL;
+    struct Node* tail = &dummy;
 
-    while (exp[i] != '\0') {
-
-        // Skip spaces
-        if (exp[i] == ' ') {
-            i++;
-            continue;
+    while (a != NULL && b != NULL) {
+        if (a->data <= b->data) {
+            tail->next = a;
+            a = a->next;
+        } else {
+            tail->next = b;
+            b = b->next;
         }
-
-        // If digit → push
-        if (isdigit(exp[i])) {
-            push(&top, exp[i] - '0');
-        }
-        // Operator
-        else {
-            int b = pop(&top);
-            int a = pop(&top);
-            int result;
-
-            switch (exp[i]) {
-                case '+': result = a + b; break;
-                case '-': result = a - b; break;
-                case '*': result = a * b; break;
-                case '/': result = a / b; break;
-            }
-
-            push(&top, result);
-        }
-
-        i++;
+        tail = tail->next;
     }
 
-    return pop(&top);
+    // Attach remaining nodes
+    tail->next = (a != NULL) ? a : b;
+
+    return dummy.next;
+}
+
+void traverse(struct Node* head) {
+    int first = 1;
+    while (head != NULL) {
+        if (!first) printf(" ");
+        printf("%d", head->data);
+        head = head->next;
+        first = 0;
+    }
+    printf("\n");
 }
 
 int main() {
-    char exp[100];
+    int n;
+    scanf("%d", &n);
+    struct Node* listA = NULL;
+    for (int i = 0; i < n; i++) {
+        int val; scanf("%d", &val);
+        listA = insertEnd(listA, val);
+    }
 
-    // Read full line including spaces
-    fgets(exp, sizeof(exp), stdin);
+    int m;
+    scanf("%d", &m);
+    struct Node* listB = NULL;
+    for (int i = 0; i < m; i++) {
+        int val; scanf("%d", &val);
+        listB = insertEnd(listB, val);
+    }
 
-    int result = evaluate(exp);
-
-    printf("%d", result);
-
+    struct Node* merged = mergeSorted(listA, listB);
+    traverse(merged);
     return 0;
 }
