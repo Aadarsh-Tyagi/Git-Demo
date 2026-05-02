@@ -1,68 +1,48 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#define MAX 100
-
-// Queue
-int queue[MAX];
-int front = -1, rear = -1;
-
-// Stack
-int stack[MAX];
-int top = -1;
-
-// Queue operations
-void enqueue(int x) {
-    if (rear == MAX - 1)
-        return;
-    if (front == -1)
-        front = 0;
-    queue[++rear] = x;
-}
-
-int dequeue() {
-    if (front == -1 || front > rear)
-        return -1;
-    return queue[front++];
-}
-
-// Stack operations
-void push(int x) {
-    if (top == MAX - 1)
-        return;
-    stack[++top] = x;
-}
-
-int pop() {
-    if (top == -1)
-        return -1;
-    return stack[top--];
+void sortArray(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++)
+        for (int j = 0; j < n - i - 1; j++)
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
 }
 
 int main() {
-    int n, x;
-
+    int n;
     scanf("%d", &n);
 
-    // Input into queue
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &x);
-        enqueue(x);
+    int arr[n];
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    sortArray(arr, n);
+
+    int left = 0, right = n - 1;
+    int bestLeft = left, bestRight = right;
+    int bestSum = abs(arr[left] + arr[right]);
+
+    while (left < right) {
+        int sum = arr[left] + arr[right];
+        int absSum = abs(sum);
+
+        if (absSum < bestSum) {
+            bestSum = absSum;
+            bestLeft = left;
+            bestRight = right;
+        }
+
+        if (sum < 0)
+            left++;       // Sum too negative, move left pointer right
+        else if (sum > 0)
+            right--;      // Sum too positive, move right pointer left
+        else
+            break;        // Exact zero found — can't do better
     }
 
-    // Step 1: Queue → Stack
-    while (front <= rear) {
-        push(dequeue());
-    }
-
-    // Step 2: Stack → Queue
-    while (top != -1) {
-        enqueue(pop());
-    }
-
-    // Print reversed queue
-    while (front <= rear) {
-        printf("%d ", dequeue());
-    }
-
+    printf("%d %d\n", arr[bestLeft], arr[bestRight]);
     return 0;
 }
